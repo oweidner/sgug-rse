@@ -21,7 +21,7 @@ The simplest method for us (the sgug-rse team) - is to:
 
 ## Packages - Deeper Detail
 
-Things that are submitted + merged into `wipnonautomated` are in fact not "live" packages yet. It's a wip branch that lets the sgug-rse team work on new/up and coming changes together. Things in this branch don't have to be perfect - so that includes things in a pull request against the branch.
+Things that are submitted + merged into `wip-testing` are in fact not "live" packages yet. It's a wip branch that lets the sgug-rse team work on new/up and coming changes together. Things in this branch don't have to be perfect - so that includes things in a pull request against the branch.
 
 Once a package is reviewed and the sgug-rse team have some confidence in a package (either through internal tests or by having the thing used by another package that is "good enough") - the package is included in the "releasepackages.txt" file that our build automation can use.
 
@@ -29,15 +29,38 @@ At the next point-in-time release of sgug-rse, our tooling then works through th
 
 ## Packages - Adding/Porting A New Package
 
-1) You may choose to port your package outside of rpmbuild, it can be easier to do the patching there before tackling the `.spec` build file
+(1) You may choose to port your package outside of rpmbuild, it can be easier to do the patching there before tackling the `.spec` build file
 
-2) Check fedora fc31 if the package exists and pull the latest source RPM. Fedora source RPMs can be searched and downloaded here: <https://koji.fedoraproject.org/koji/packages>.
+**(2)** Check fedora fc31 if the package exists and pull the latest source RPM. Fedora source RPMs can be searched and downloaded here: <https://koji.fedoraproject.org/koji/packages>.
 
-3) Install srpm, copy .spec into rse packages/PACKAGENAME/SPECS/PACKAGENAME.spec.origfedora
+**(3)**  Download the source RPM from the Fedora archive:
 
-4) Edit ~/rpmbuild/SPECS/PACKAGENAME.spec until it is happily building (add patches in ~/rpmbuild/SOURCES/packagename.sgifixes.patch etc)
+```shell
+cd ~/rpmbuild/SRPMS
+wget https://kojipkgs.fedoraproject.org//vol/fedora_koji_archive04/packages/alpine/2.24/1.fc31/src/alpine-2.24-1.fc31.src.rpm
+```
 
-5) Copy back PACKAGENAME.spec to repo PACKAGENAME/SPECS/PACKAGENAME.spec plus any patches or modified sources into PACKAGENAME/SOURCES/
+Install the downloaded source RPM:
+
+```shell
+cd ~/rpmbuild
+rpm -ivh ~/rpmbuild/SRPMS/alpine-2.24-1.fc31.src.rpm
+```
+
+This will copy the source archive and patched into `~/rpmbuild/SOURCES` and the .spec file into `~/pmbuild/SPECS`.
+
+**(4)** Edit `~/rpmbuild/SPECS/PACKAGENAME.spec` until it is happily building:
+
+```shell
+cd ~/rpmbuild/
+rpmbuild -ba ~/rpmbuild/SPECS/alpine.spec --nocheck
+```
+
+(add patches in ~/rpmbuild/SOURCES/packagename.sgifixes.patch etc).
+
+1) Copy back PACKAGENAME.spec to repo PACKAGENAME/SPECS/PACKAGENAME.spec plus any patches or modified sources into PACKAGENAME/SOURCES/
+
+Install srpm, copy .spec into rse packages/PACKAGENAME/SPECS/PACKAGENAME.spec.origfedora
 
 6) If you can't find the exact version of the package, still try and use the .spec from fc31, we get dependency bonuses with other packages that might depend on it
 
@@ -45,7 +68,7 @@ At the next point-in-time release of sgug-rse, our tooling then works through th
 
 8) Really there's no hard rules about quality - there's already packages in the rse that fail some tests, so don't be shy about "it has to be perfect"
 
-9) We prefer to not include large files in the repository, it is nice that this repository remains usable on irix natively
+9)  We prefer to not include large files in the repository, it is nice that this repository remains usable on irix natively
 
 ## Packages - Git Snapshots
 
