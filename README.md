@@ -158,7 +158,7 @@ rpmbuild -ba ~/rpmbuild/SPECS/mpg123.spec --nocheck
 **(6)** After building, install of fresh RPMs must be done as root (add `--reinstall` to refresh an already installed package):
 
 ```shell
-sudo rpm -ivh ~/rpmbuild/RPMS/mips/m4*.rpm
+sudo rpm --reinstall -ivh ~/rpmbuild/RPMS/mips/mpg123-*.rpm
 ```
 
 ## Bugs
